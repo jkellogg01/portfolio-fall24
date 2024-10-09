@@ -1,12 +1,14 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import { spotifyRoute } from "./routes/spotify";
+import { callbackRoutes as callbackRoute } from "./routes/callback";
 
 const app = new Hono();
 
-app.use("*", logger());
+app.use(logger());
 
-app.get("/healthz", (ctx) => {
-	return ctx.text("all is well");
-});
+app.route("/api/spotify", spotifyRoute);
+
+app.route("/api/callback", callbackRoute);
 
 export default app;
