@@ -7,23 +7,19 @@ const spotify = new Database("spotify.sqlite", { create: true });
 export const dbSpotify = drizzle(spotify);
 
 export async function getAccessKey() {
-	const key = dbSpotify
+	const key = await dbSpotify
 		.select()
 		.from(keyTable)
 		.groupBy(keyTable.createdAt)
-		.limit(1)
-		.get();
-	if (!key) {
-		throw new Error("no keys available");
+		.limit(1);
+	if (key.length > 0 && key[0].expiresAt > Math.floor(Date.now() / 1000)) {
+		return key[0].accessKey;
 	}
-	if (key.expiresAt > Math.floor(Date.now() / 1000)) {
-		return key.accessKey;
-	}
-	return await refreshSpotifyAPIKey(key.refreshKey)
+	return await refreshSpotifyAPIKey(key[0].refreshKey)
 		.then((refreshed) => {
 			dbSpotify.insert(keyTable).values({
 				accessKey: refreshed.access_token,
-				refreshKey: refreshed.refresh_token,
+				refreshKey: refreshed.refresh_token ?? key[0].refreshKey,
 				expiresAt: Math.floor(Date.now() / 1000) + refreshed.expires_in,
 				scope: refreshed.scope,
 			});
@@ -51,6 +47,11 @@ async function refreshSpotifyAPIKey(refreshKey: string) {
 		throw new Error("failed to refresh spotify API key");
 	}
 	const body = await res.json();
-	const parsed = spotifyAccessTokenSchema.parse(body);
-	return parsed;
+	try {
+		const parsed = spotifyAccessTokenSchema.parse(body);
+		return parsed;
+	} catch (err) {
+		console.debug(body);
+		throw err;
+	}
 }

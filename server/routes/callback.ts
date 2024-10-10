@@ -8,7 +8,7 @@ export const spotifyAccessTokenSchema = z.object({
 	token_type: z.string().refine((x) => x === "Bearer"),
 	scope: z.string().optional(),
 	expires_in: z.number().int(),
-	refresh_token: z.string(),
+	refresh_token: z.string().optional(),
 });
 
 export const callbackRoute = new Hono().get("/spotify", async (c) => {

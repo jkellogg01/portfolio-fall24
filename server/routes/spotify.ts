@@ -57,6 +57,17 @@ const spotifyGetTopArtistSchema = z.object({
 	items: z.array(spotifyArtistSchema),
 });
 
+const topArtistSearchSchema = z.object({
+	limit: z.string().default("20"),
+	offset: z.string().default("0"),
+	time_range: z
+		.string()
+		.refine(
+			(x) => x === "short_term" || x === "medium_term" || x === "long_term",
+		)
+		.default("medium_term"),
+});
+
 export const spotifyRoute = new Hono()
 	.get("/authorize", async (c) => {
 		const { token } = c.req.query();
@@ -79,28 +90,33 @@ export const spotifyRoute = new Hono()
 			`https://accounts.spotify.com/authorize?${searchParams.toString()}`,
 		);
 	})
-	.get("/top/artists", getAccessTokenMiddleware, async (c) => {
-		const spotifyAccess = c.var.token;
-		const { limit, offset, time_range } = c.req.query();
-		const res = await fetch(
-			`https://api.spotify.com/v1/me/top/artists?${new URLSearchParams({
-				limit,
-				offset,
-				time_range,
-			}).toString()}`,
-			{
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${spotifyAccess}`,
+	.get(
+		"/top/artists",
+		getAccessTokenMiddleware,
+		zValidator("query", topArtistSearchSchema),
+		async (c) => {
+			const spotifyAccess = c.var.token;
+			const { limit, offset, time_range } = c.req.query();
+			const res = await fetch(
+				`https://api.spotify.com/v1/me/top/artists?${new URLSearchParams({
+					limit,
+					offset,
+					time_range,
+				}).toString()}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${spotifyAccess}`,
+					},
 				},
-			},
-		);
-		if (!res.ok) {
-			res.json().then((body) => {
-				console.error(body);
-			});
-			throw new Error(`${c.req.url}: ${res.status} ${res.statusText}`);
-		}
-		const data = await res.json();
-		return c.json(spotifyGetTopArtistSchema.parse(data));
-	});
+			);
+			if (!res.ok) {
+				res.json().then((body) => {
+					console.error(body);
+				});
+				throw new Error(`${c.req.url}: ${res.status} ${res.statusText}`);
+			}
+			const data = await res.json();
+			return c.json(spotifyGetTopArtistSchema.parse(data));
+		},
+	);

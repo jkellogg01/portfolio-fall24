@@ -6,9 +6,11 @@ import { callbackRoute } from "./routes/callback";
 const app = new Hono();
 app.use(logger());
 
-const api = new Hono();
-api.route("/spotify", spotifyRoute);
-api.route("/callback", callbackRoute);
-app.route("/api", api);
+const api = app
+	.basePath("/api")
+	.route("/spotify", spotifyRoute)
+	.route("/callback", callbackRoute);
+
+export type AppType = typeof api;
 
 export default app;
