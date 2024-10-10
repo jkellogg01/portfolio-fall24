@@ -4,12 +4,12 @@ import { z } from "zod";
 const spotifyAccessTokenSchema = z.object({
 	access_token: z.string(),
 	token_type: z.string().refine((x) => x === "Bearer"),
-	scope: z.string(),
+	scope: z.string().optional(),
 	expires_in: z.number().int(),
 	refresh_token: z.string(),
 });
 
-export const callbackRoutes = new Hono().get("/spotify", async (c) => {
+export const callbackRoute = new Hono().get("/spotify", async (c) => {
 	const { code, error } = c.req.query();
 	if (error || !code) {
 		console.error(`spotify callback failed: ${error}`);
@@ -30,8 +30,21 @@ export const callbackRoutes = new Hono().get("/spotify", async (c) => {
 			error: "failed to fetch spotify access code",
 			response: await res.json(),
 		});
+		res
+			.json()
+			.then((data) => {
+				console.error({
+					error: "failed to fetch spotify access code",
+					response: data,
+				});
+			})
+			.catch(() => {
+				console.error({ error: "failed to fetch spotify access code" });
+			});
 		return c.json({ error: "failed to fetch spotify access code" }, 500);
 	}
 	const data = await res.json();
-	return c.json({ data });
+	console.debug(data);
+	const accessTokenResponse = spotifyAccessTokenSchema.parse(data);
+	return c.json({ data: accessTokenResponse });
 });

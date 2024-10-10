@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
 
-export const spotifyRoute = new Hono().get("authorize", async (c) => {
+export const spotifyRoute = new Hono().get("/authorize", async (c) => {
 	const { token } = c.req.query();
 	try {
 		await verify(token, process.env.JWT_SECRET!);
