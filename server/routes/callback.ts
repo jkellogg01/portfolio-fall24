@@ -1,7 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
+import { dbSpotify } from "../db/init";
+import { keyTable } from "../db/schema";
 
-const spotifyAccessTokenSchema = z.object({
+export const spotifyAccessTokenSchema = z.object({
 	access_token: z.string(),
 	token_type: z.string().refine((x) => x === "Bearer"),
 	scope: z.string().optional(),
@@ -46,5 +48,11 @@ export const callbackRoute = new Hono().get("/spotify", async (c) => {
 	const data = await res.json();
 	console.debug(data);
 	const accessTokenResponse = spotifyAccessTokenSchema.parse(data);
-	return c.json({ data: accessTokenResponse });
+	const dbResult = await dbSpotify.insert(keyTable).values({
+		accessKey: accessTokenResponse.access_token,
+		refreshKey: accessTokenResponse.refresh_token,
+		expiresAt: Math.floor(Date.now() / 1000) + accessTokenResponse.expires_in,
+		scope: accessTokenResponse.scope,
+	});
+	return c.json({ dbResult });
 });
