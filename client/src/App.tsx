@@ -1,5 +1,3 @@
-function App() {
+export default function App() {
 	return "welcome!";
 }
-
-export default App;
