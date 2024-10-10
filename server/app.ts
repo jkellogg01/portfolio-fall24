@@ -7,8 +7,8 @@ const app = new Hono();
 app.use(logger());
 
 const api = new Hono();
-app.route("/api", api);
 api.route("/spotify", spotifyRoute);
 api.route("/callback", callbackRoute);
+app.route("/api", api);
 
 export default app;
