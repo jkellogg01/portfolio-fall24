@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTopSongs } from "../api";
-import spotifyLogo from "/spotify-logo/rgb.svg";
 
 export function TopArtists({
 	limit,
