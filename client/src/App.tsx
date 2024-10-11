@@ -1,9 +1,9 @@
-import TopSongs from "./components/TopSongs";
+import { TopArtists } from "./components/TopArtists";
 
 export default function () {
 	return (
 		<div className="min-h-svh container mx-auto flex justify-center items-center">
-			<TopSongs />
+			<TopArtists limit={5} offset={0} time_range="short_term" />
 		</div>
 	);
 }
