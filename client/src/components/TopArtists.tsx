@@ -17,20 +17,18 @@ export function TopArtists({
 	});
 	if (error || !data) {
 		return (
-			<div className="border-tokyonight-fg border rounded-lg content-center text-center max-w-sm p-4">
+			<div className="border-tokyonight-foreground border rounded-lg content-center text-center max-w-sm p-4">
 				Looks like we aren't getting along with spotify's api at the moment.
 				check back later.
 			</div>
 		);
 	}
 	return (
-		<div className="border border-tokyonight-fg rounded-lg max-w-sm bg-tokyonight-bg-dark p-4 flex flex-col gap-4">
-			<div className="bg-tokyonight-bg p-2 rounded-md flex flex-row justify-between items-baseline">
-				<h2 className="text-xl font-bold text-tokyonight-fg-dark">
-					Top Artists
-				</h2>
-				<div className="min-h-full min-w-[70px] content-end">
-					<SpotifyLogo className="fill-tokyonight-fg h-5" />
+		<div className="flex flex-col gap-4">
+			<div className="bg-tokyonight-background border-tokyonight-foreground-dark border p-2 rounded-md flex flex-row justify-between items-baseline">
+				<h2 className="text-xl font-bold text-tokyonight-red">Top Artists</h2>
+				<div className="min-h-full content-end">
+					<SpotifyLogo className="fill-tokyonight-foreground h-5 min-w-[70px]" />
 				</div>
 			</div>
 			{data.items.map((item) => (
@@ -66,7 +64,10 @@ function ArtistCard({
 			.at(0) ?? images.at(0)!;
 
 	return (
-		<a href={url} className="block bg-tokyonight-bg rounded-md">
+		<a
+			href={url}
+			className="block bg-tokyonight-background border border-tokyonight-foreground-dark rounded-md"
+		>
 			<div className="p-2 flex flex-row gap-2">
 				<div className="min-w-20">
 					<img
@@ -77,8 +78,8 @@ function ArtistCard({
 					/>
 				</div>
 				<div className="flex flex-col">
-					<h3>{name}</h3>
-					<p className="text-sm text-tokyonight-fg-dark">{genres}</p>
+					<h3 className="font-medium">{name}</h3>
+					<p className="text-sm text-tokyonight-foreground-dark">{genres}</p>
 				</div>
 			</div>
 		</a>
