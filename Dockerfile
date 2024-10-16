@@ -1,10 +1,10 @@
-FROM oven/bun:latest-slim as base
+FROM oven/bun:slim AS base
 
 WORKDIR /app
 
 ENV NODE_ENV="production"
 
-FROM base as build
+FROM base AS build
 
 COPY --link bun.lockb package.json ./
 RUN bun install --ci
