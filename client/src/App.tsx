@@ -1,3 +1,4 @@
+import { ContactForm } from "./components/ContactForm";
 import { TopArtists } from "./components/TopArtists";
 
 // these seem redundant but formatters do not respect the contents of <pre> tags. Who knows why? Certainly not me
@@ -63,7 +64,7 @@ export default function () {
           </pre>
           <pre
             className="w-fit text-xs"
-            aria-lable="Kellogg"
+            aria-label="Kellogg"
             aria-description="ascii art of the last name Kellogg"
           >
             {figLastName}
@@ -98,6 +99,7 @@ export default function () {
             <a
               className="underline text-tokyonight-blue"
               href="https://pages.cs.wisc.edu/~remzi/OSTEP/"
+              target="_blank"
             >
               operating systems
             </a>
@@ -114,6 +116,9 @@ export default function () {
             if you're looking to add a passionate, dynamic, and highly-motivated
             junior engineer to your team, don't hesitate to reach out!
           </p>
+        </div>
+        <div className="border border-tokyonight-foreground bg-tokyonight-background-dark p-4 rounded-lg">
+          <ContactForm />
         </div>
       </div>
     </div>
