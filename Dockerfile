@@ -13,6 +13,8 @@ COPY --link client/bun.lockb client/package.json ./client/
 RUN cd client && bun install --ci
 
 COPY --link . .
+RUN bun run db:push
+COPY --link . .
 
 WORKDIR /app/client
 RUN bun run build
@@ -24,4 +26,4 @@ FROM base
 COPY --from=build /app /app
 
 EXPOSE 3000
-CMD [ "bun", "run", "start" ]
+ENTRYPOINT [ "bun", "run", "start" ]

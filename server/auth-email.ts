@@ -28,6 +28,6 @@ async function getAuthorizationLink() {
   const authorizeHost =
     process.env.NODE_ENV === "production"
       ? process.env.RAILWAY_PUBLIC_DOMAIN!
-      : "http://localhost:5173";
+      : "http://localhost:3000";
   return `${authorizeHost}/api/spotify/authorize?token=${token}`;
 }

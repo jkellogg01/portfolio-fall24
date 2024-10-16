@@ -82,7 +82,7 @@ export default function () {
           <pre className="w-fit text-xs">{fetchResult}</pre>
         </div>
         <div className="bg-tokyonight-background-dark border border-tokyonight-foreground rounded-lg p-4 hidden md:block">
-          <TopArtists limit={5} offset={0} time_range="medium_term" />
+          <TopArtists limit={5} offset={0} time_range="short_term" />
         </div>
       </div>
       <div className="flex flex-col gap-4 max-w-prose">
