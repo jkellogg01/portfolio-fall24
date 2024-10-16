@@ -56,15 +56,31 @@ export default function () {
   return (
     <div className="container mx-auto my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
       <div className="flex flex-col gap-4 w-full md:w-96 xl:w-[38rem]">
-        <div className="text-tokyonight-green bg-tokyonight-background-dark p-4 rounded-lg flex flex-col sm:flex-row md:flex-col xl:flex-row justify-center items-center gap-0 border border-tokyonight-foreground">
-          <pre className="w-fit text-xs">{figFirstName}</pre>
-          <pre className="w-fit text-xs">{figLastName}</pre>
+        <div className="text-tokyonight-magenta bg-tokyonight-background-dark p-4 rounded-lg flex flex-col sm:flex-row md:flex-col xl:flex-row justify-center items-center gap-0 border border-tokyonight-foreground">
+          <pre
+            className="w-fit text-xs"
+            aria-label="Joshua"
+            aria-description="ascii art of the first name Joshua"
+          >
+            {figFirstName}
+          </pre>
+          <pre
+            className="w-fit text-xs"
+            aria-lable="Kellogg"
+            aria-description="ascii art of the last name Kellogg"
+          >
+            {figLastName}
+          </pre>
         </div>
         <div className="justify-center bg-tokyonight-background-dark p-4 rounded-lg hidden md:flex flex-row gap-0 border border-tokyonight-foreground">
-          <pre className="w-fit text-xs hidden xl:block text-tokyonight-cyan">
+          <pre
+            className="w-fit text-xs hidden xl:block text-tokyonight-cyan"
+            aria-description="ascii art of the Arch Linux logo"
+          >
             {arch}
           </pre>
           <div className="w-[1ch] hidden xl:block" />
+          {/* I don't think this needs aria-description because it's actually textual */}
           <pre className="w-fit text-xs text-tokyonight-blue">
             {fetchResult}
           </pre>
@@ -75,32 +91,31 @@ export default function () {
       </div>
       <div className="flex flex-col gap-4 max-w-prose">
         <div className="bg-tokyonight-background-dark p-4 rounded-lg border border-tokyonight-foreground">
+          <h3 className="text-lg font-bold text-tokyonight-green">About Me</h3>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            vel gravida purus. Aenean luctus mauris eu cursus vulputate.
-            Vestibulum pulvinar orci a elit eleifend, in efficitur dui commodo.
-            Suspendisse nec feugiat sapien. Donec tortor mauris, tincidunt vel
-            consectetur vel, ultricies vitae metus. Praesent tempor massa quis
-            turpis elementum, ac dictum lectus tempor. Donec eu hendrerit sem.
-            Integer vitae tortor in ligula ultrices eleifend vel id ante.
-            Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
-            et porttitor metus. Aliquam tempor sollicitudin libero, ornare
-            vulputate enim dapibus ac. Maecenas risus eros, dictum ut turpis
-            vitae, venenatis posuere nunc. Suspendisse mauris magna, condimentum
-            ut aliquam ac, pharetra tempor justo. Aliquam eget aliquam quam, sed
-            tristique diam. Ut lobortis dapibus pharetra. Nulla pulvinar
-            venenatis congue. Vestibulum ante ipsum primis in faucibus orci
-            luctus et ultrices posuere cubilia curae; Quisque nisi velit, mollis
-            eu magna quis, dictum posuere mi. Morbi dignissim orci ac eros
-            pulvinar, ac porta est hendrerit. Vestibulum ante ipsum primis in
-            faucibus orci luctus et ultrices posuere cubilia curae; Morbi luctus
-            non ex sed lobortis. Class aptent taciti sociosqu ad litora torquent
-            per conubia nostra, per inceptos himenaeos. Nullam elit nibh,
-            sollicitudin efficitur orci et, placerat ultrices magna. Nunc
-            venenatis elementum porttitor. Mauris arcu massa, laoreet ut justo
-            sit amet, ultricies consequat lorem. Donec laoreet commodo diam ac
-            aliquam. Cras at semper magna. Praesent commodo metus quis aliquam
-            dapibus.
+            My name is Joshua Kellogg and I'm a full-stack software engingeer.
+            I've been doing full-stack web development since I graduated from
+            the University of Denver's Full-Stack Flex boot camp. I love to
+            explore areas of computer science outside of web development (most
+            recently{" "}
+            <a
+              className="underline text-tokyonight-blue"
+              href="https://pages.cs.wisc.edu/~remzi/OSTEP/"
+            >
+              operating systems
+            </a>
+            ). I also really love:
+          </p>
+          <ul className="list-disc list-inside leading-loose">
+            <li>Ricing Linux (on regular intervals)</li>
+            <li>Riding my bike</li>
+            <li>Hanging out with my dog</li>
+            <li>Playing guitar</li>
+          </ul>
+          <p>
+            I'm currently seeking out full-time software engineering roles, so
+            if you're looking to add a passionate, dynamic, and highly-motivated
+            junior engineer to your team, don't hesitate to reach out!
           </p>
         </div>
       </div>
