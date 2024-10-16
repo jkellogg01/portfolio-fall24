@@ -1,6 +1,5 @@
 [build]
 builder = "DOCKERFILE"
-nixpacksPlan = {"providers":["bun"]}
 dockerfilePath = "dockerfile"
 
 [deploy]
