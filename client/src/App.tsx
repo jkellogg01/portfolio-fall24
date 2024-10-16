@@ -58,14 +58,14 @@ export default function () {
           <pre
             className="w-fit text-xs"
             aria-label="Joshua"
-            aria-description="ascii art of the first name Joshua"
+            aria-description="ascii art of my first name, Joshua"
           >
             {figFirstName}
           </pre>
           <pre
             className="w-fit text-xs"
             aria-label="Kellogg"
-            aria-description="ascii art of the last name Kellogg"
+            aria-description="ascii art of my last name, Kellogg"
           >
             {figLastName}
           </pre>
@@ -79,9 +79,7 @@ export default function () {
           </pre>
           <div className="w-[1ch] hidden xl:block" />
           {/* I don't think this needs aria-description because it's actually textual */}
-          <pre className="w-fit text-xs text-tokyonight-blue">
-            {fetchResult}
-          </pre>
+          <pre className="w-fit text-xs">{fetchResult}</pre>
         </div>
         <div className="bg-tokyonight-background-dark border border-tokyonight-foreground rounded-lg p-4 hidden md:block">
           <TopArtists limit={5} offset={0} time_range="medium_term" />
@@ -89,7 +87,7 @@ export default function () {
       </div>
       <div className="flex flex-col gap-4 max-w-prose">
         <div className="bg-tokyonight-background-dark p-4 rounded-lg border border-tokyonight-foreground">
-          <h3 className="text-lg font-bold text-tokyonight-green">About Me</h3>
+          <h3 className="text-lg font-bold text-tokyonight-blue">About Me</h3>
           <p>
             My name is Joshua Kellogg and I'm a full-stack software engingeer.
             I've been doing full-stack web development since I graduated from
@@ -106,7 +104,16 @@ export default function () {
             ). I also really love:
           </p>
           <ul className="list-disc list-inside leading-loose">
-            <li>Ricing Linux (on regular intervals)</li>
+            <li>
+              Ricing{" "}
+              <a
+                href="https://stallman-copypasta.github.io/"
+                target="_blank"
+                className="text-tokyonight-magenta-bright cursor-pointer"
+              >
+                Linux
+              </a>
+            </li>
             <li>Riding my bike</li>
             <li>Hanging out with my dog</li>
             <li>Playing guitar</li>
