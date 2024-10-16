@@ -46,11 +46,8 @@ Packages: 663 (pacman)
 Shell: bash 5.2.32
 Resolution: 2560x1440
 WM: sway
-Terminal: alacritty
-CPU: AMD Ryzen 7 7700X (16) @ 5.573GHz
-GPU: AMD ATI 0e:00.0 Raphael
-GPU: AMD ATI Radeon RX 6600/6600 XT/6600M
-Memory: 6433MiB / 31233MiB`;
+Theme: tokyonight
+Terminal: alacritty`;
 
 export default function () {
   return (
