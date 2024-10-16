@@ -27,7 +27,7 @@ async function getAuthorizationLink() {
   );
   const authorizeHost =
     process.env.NODE_ENV === "production"
-      ? "https://www.jkellogg.dev"
+      ? process.env.RAILWAY_PUBLIC_DOMAIN!
       : "http://localhost:5173";
   return `${authorizeHost}/api/spotify/authorize?token=${token}`;
 }
