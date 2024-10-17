@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -28,6 +28,15 @@ func spotifyAuthBegin() http.HandlerFunc {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		http.SetCookie(w, &http.Cookie{
+			Name:        "spotify-auth-state",
+			Value:       generateRandomString(16),
+			Path:        "/",
+			Secure:      true,
+			HttpOnly:    true,
+			SameSite:    http.SameSiteLaxMode,
+			Partitioned: true,
+		})
 		http.Redirect(w, r, fmt.Sprintf(
 			"https://accounts.spotify.com/authorize?response_type=code&show_dialog=false&scope=%sclient_id=%s&redirect_uri=%s",
 			url.QueryEscape("user-top-read"), url.QueryEscape(os.Getenv("SPOTIFY_CLIENT_ID")), url.QueryEscape(os.Getenv("SPOTIFY_REDIRECT_URI")),
@@ -43,7 +52,15 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		// TODO: check for the state and check it against the cookie for the state
+		state := values.Get("state")
+		stateCookie, err := r.Cookie("spotify-auth-state")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		} else if stateCookie.Value != state {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		if values.Has("error") {
 			log.Printf("spotify authorization denied: %s", values.Get("error"))
 			w.WriteHeader(http.StatusBadRequest)
@@ -106,4 +123,20 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 		}
 		w.WriteHeader(http.StatusOK)
 	}
+}
+
+func generateRandomString(length int) string {
+	buf := make([]byte, 0, length)
+	for range length {
+		char := byte(rand.Intn(62))
+		if char < 10 {
+			char += '0'
+		} else if char < 36 {
+			char += 'a'
+		} else {
+			char += 'A'
+		}
+		buf = append(buf, char)
+	}
+	return string(buf)
 }
