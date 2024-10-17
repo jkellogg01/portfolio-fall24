@@ -1,0 +1,14 @@
+services:
+  api_server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    env_file: ./server/.env
+    develop:
+      watch:
+        - path: ./server
+          action: rebuild
+          ignore:
+            - ./server/sql/
