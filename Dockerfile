@@ -1,21 +1,23 @@
-FROM golang:1.23 AS server-build
+FROM golang:alpine AS server-build
+
+ENV CGO_ENABLED=1
+ENV GOOS=linux
+
+RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app/server
 
 COPY server/go.mod server/go.sum ./
 RUN go mod download
 
-# NOTE: using a wildcard to match for go files seems to break just about
-# everything, so we'll just copy extra stuff because we throw it out
-# later anyways.
 COPY server .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /portfolio
+RUN go build -ldflags='-s -w -extldflags "-static"' -o /portfolio-server
 
 FROM server-build AS server-test
 
 RUN go test -v ./...
 
-FROM oven/bun:1.1.28-slim AS client-build
+FROM oven/bun:slim AS client-build
 
 WORKDIR /app/client
 
@@ -37,8 +39,8 @@ FROM alpine AS build-release-stage
 WORKDIR /
 
 COPY --from=client-build /app/client/dist /dist
-COPY --from=server-build /portfolio /portfolio
+COPY --from=server-build /portfolio-server /portfolio-server
 COPY server/sql/schema sql/schema
 
 EXPOSE 8080
-ENTRYPOINT [ "/portfolio" ]
+ENTRYPOINT [ "/portfolio-server" ]
