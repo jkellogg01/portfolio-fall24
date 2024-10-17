@@ -45,13 +45,20 @@ func main() {
 	dist := http.FileServer(http.Dir("dist"))
 	router.Handle("/", dist)
 
+	port := cmp.Or(os.Getenv("PORT"), "8080")
 	server := http.Server{
-		Addr:    fmt.Sprintf("0.0.0.0:%s", cmp.Or(os.Getenv("PORT"), "8080")),
+		Addr:    fmt.Sprintf("0.0.0.0:%s", port),
 		Handler: middleware.Log(router),
 	}
 
 	log.Printf("starting server at %s", server.Addr)
-	log.Printf("authorize spotify at %s/api/spotify/authorize/%s", server.Addr, tokenString)
+	var currentAddress string
+	if os.Getenv("RAILWAY_PUBLIC_DOMAIN") != "" {
+		currentAddress = os.Getenv("RAILWAY_PUBLIC_DOMAIN")
+	} else {
+		currentAddress = fmt.Sprintf("http://localhost:%s", port)
+	}
+	log.Printf("authorize spotify at:\n%s/api/spotify/authorize/%s", currentAddress, tokenString)
 	err = server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
