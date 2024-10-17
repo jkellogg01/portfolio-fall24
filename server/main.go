@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/jkellogg01/portfolio-fall24/server/database"
+	"github.com/jkellogg01/portfolio-fall24/server/middleware"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pressly/goose"
@@ -41,7 +42,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    fmt.Sprintf("0.0.0.0:%s", cmp.Or(os.Getenv("PORT"), "8080")),
-		Handler: router,
+		Handler: middleware.Log(router),
 	}
 
 	log.Printf("starting server at %s", server.Addr)

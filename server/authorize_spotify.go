@@ -22,10 +22,10 @@ func spotifyAuthBegin() http.HandlerFunc {
 		tokenString := r.PathValue("token")
 		token, err := jwt.ValidateAccessToken(tokenString)
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "failed to validate access token")
+			respondWithError(w, r, http.StatusInternalServerError, "failed to validate access token")
 			return
 		} else if !token.Valid {
-			respondWithError(w, http.StatusBadRequest, "invalid access token")
+			respondWithError(w, r, http.StatusBadRequest, "invalid access token")
 			return
 		}
 		http.SetCookie(w, &http.Cookie{
@@ -49,24 +49,24 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		values, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
-			respondWithError(w, http.StatusBadRequest, "could not parse query parameters")
+			respondWithError(w, r, http.StatusBadRequest, "could not parse query parameters")
 			return
 		}
 		state := values.Get("state")
 		stateCookie, err := r.Cookie("spotify-auth-state")
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "could not parse state cookie")
+			respondWithError(w, r, http.StatusInternalServerError, "could not parse state cookie")
 			return
 		} else if stateCookie.Value != state {
-			respondWithError(w, http.StatusBadRequest, "state mismatch")
+			respondWithError(w, r, http.StatusBadRequest, "state mismatch")
 			return
 		}
 		if values.Has("error") {
 			log.Printf("spotify authorization denied: %s", values.Get("error"))
-			respondWithError(w, http.StatusBadRequest, "spotify authorization denied: %s", values.Get("error"))
+			respondWithError(w, r, http.StatusBadRequest, "spotify authorization denied: %s", values.Get("error"))
 			return
 		} else if !values.Has("code") {
-			respondWithError(w, http.StatusBadRequest, "spotify returned no error but provided no code")
+			respondWithError(w, r, http.StatusBadRequest, "spotify returned no error but provided no code")
 			return
 		}
 		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(
@@ -74,7 +74,7 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			url.QueryEscape(values.Get("code")), url.QueryEscape(os.Getenv("SPOTIFY_REDIRECT_URI")),
 		), nil)
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "failed to create token request")
+			respondWithError(w, r, http.StatusInternalServerError, "failed to create token request")
 			return
 		}
 		clientInfo := fmt.Sprintf("%s:%s", os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"))
@@ -83,10 +83,10 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "failed to request token from spotify")
+			respondWithError(w, r, http.StatusInternalServerError, "failed to request token from spotify")
 			return
 		} else if res.StatusCode != http.StatusOK {
-			respondWithError(w, http.StatusInternalServerError, "got response %s from spotify's api", res.Status)
+			respondWithError(w, r, http.StatusInternalServerError, "got response %s from spotify's api", res.Status)
 			return
 		}
 		var body struct {
@@ -98,11 +98,11 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 		}
 		err = json.NewDecoder(res.Body).Decode(&body)
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "failed to parse token response body")
+			respondWithError(w, r, http.StatusInternalServerError, "failed to parse token response body")
 			return
 		}
 		if body.TokenType != "Bearer" {
-			respondWithError(w, http.StatusInternalServerError, "got invalid token type %s", body.TokenType)
+			respondWithError(w, r, http.StatusInternalServerError, "got invalid token type %s", body.TokenType)
 			return
 		}
 		expireAt := time.Now().Add(time.Duration(body.ExpiresIn) * time.Second)
@@ -113,7 +113,7 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			Scope:        sql.NullString{Valid: body.Scope != "", String: body.Scope},
 		})
 		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, "failed to write token pair to database")
+			respondWithError(w, r, http.StatusInternalServerError, "failed to write token pair to database")
 			return
 		}
 		respondWithJSON(w, http.StatusCreated, tokenPair)

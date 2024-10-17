@@ -1,14 +1,17 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 )
 
-func respondWithError(w http.ResponseWriter, status int, format string, values ...any) {
+func respondWithError(w http.ResponseWriter, r *http.Request, status int, format string, values ...any) {
 	errorMessage := fmt.Sprintf(format, values...)
+	ctx := context.WithValue(r.Context(), "error", errorMessage)
+	r = r.WithContext(ctx)
 	respondWithJSON(w, status, map[string]string{
 		"error": errorMessage,
 	})
