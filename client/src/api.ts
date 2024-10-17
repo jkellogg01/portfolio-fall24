@@ -2,8 +2,8 @@ import { z } from "zod";
 
 const spotifyImageSchema = z.object({
   url: z.string().url(),
-  height: z.number().int(),
-  width: z.number().int(),
+  height: z.number().int().optional(),
+  width: z.number().int().optional(),
 });
 
 const spotifyArtistSchema = z.object({
@@ -14,7 +14,7 @@ const spotifyArtistSchema = z.object({
     .optional(),
   followers: z
     .object({
-      href: z.null(),
+      href: z.null().optional(),
       total: z.number().int(),
     })
     .optional(),
@@ -29,8 +29,8 @@ const spotifyArtistSchema = z.object({
 
 const spotifyGetTopArtistsSchema = z.object({
   href: z.string().url(),
-  next: z.string().url().nullable(),
-  previous: z.string().url().nullable(),
+  next: z.string().url().optional(),
+  previous: z.string().url().optional(),
   limit: z.number().int(),
   offset: z.number().int(),
   total: z.number().int(),

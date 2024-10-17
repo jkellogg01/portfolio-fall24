@@ -56,12 +56,7 @@ function ArtistCard({
   genres: string;
 }) {
   const image =
-    images
-      .filter(({ width, height }) => {
-        console.debug(`${name}: ${width} x ${height} available`);
-        return width === height;
-      })
-      .at(0) ?? images.at(0)!;
+    images.find(({ width, height }) => width === height) ?? images[0];
 
   return (
     <a

@@ -35,11 +35,12 @@ func main() {
 
 	api := http.NewServeMux()
 	router.Handle("/api/", http.StripPrefix("/api", api))
-	api.HandleFunc("/spotify/authorize/{token}", spotifyAuthBegin())
-	api.HandleFunc("/spotify/authorize/callback", spotifyAuthCallback(queries))
+	api.HandleFunc("GET /spotify/authorize/{token}", spotifyAuthBegin())
+	api.HandleFunc("GET /spotify/authorize/callback", spotifyAuthCallback(queries))
 
 	spotifyAuthed := http.NewServeMux()
-	api.Handle("/spotify", middleware.GetSpotifyToken(spotifyAuthed, queries))
+	api.Handle("/spotify/", http.StripPrefix("/spotify", middleware.GetSpotifyToken(spotifyAuthed, queries)))
+	spotifyAuthed.HandleFunc("GET /top/artists", spotifyTopArtists)
 
 	dist := http.FileServer(http.Dir("dist"))
 	router.Handle("/", dist)
