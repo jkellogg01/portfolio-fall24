@@ -11,18 +11,12 @@ import (
 	"github.com/jkellogg01/portfolio-fall24/server/database"
 	"github.com/jkellogg01/portfolio-fall24/server/jwt"
 	"github.com/jkellogg01/portfolio-fall24/server/middleware"
-	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pressly/goose"
 )
 
 func main() {
 	log.SetOutput(os.Stdout)
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	db, err := initDB()
 	if err != nil {
