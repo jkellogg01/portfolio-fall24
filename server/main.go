@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/jkellogg01/portfolio-fall24/server/database"
+	"github.com/jkellogg01/portfolio-fall24/server/jwt"
 	"github.com/jkellogg01/portfolio-fall24/server/middleware"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
@@ -28,6 +29,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	token := jwt.GenerateAccessToken()
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	queries := database.New(db)
 
 	router := http.NewServeMux()
@@ -36,6 +43,9 @@ func main() {
 	router.Handle("/api/", http.StripPrefix("/api", api))
 	api.HandleFunc("/spotify/authorize/{token}", spotifyAuthBegin())
 	api.HandleFunc("/spotify/authorize/callback", spotifyAuthCallback(queries))
+
+	spotifyAuthed := http.NewServeMux()
+	api.Handle("/spotify", middleware.GetSpotifyToken(spotifyAuthed, queries))
 
 	dist := http.FileServer(http.Dir("dist"))
 	router.Handle("/", dist)
@@ -46,6 +56,7 @@ func main() {
 	}
 
 	log.Printf("starting server at %s", server.Addr)
+	log.Printf("authorize spotify at %s/api/spotify/authorize/%s", server.Addr, tokenString)
 	err = server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
@@ -54,7 +65,6 @@ func main() {
 
 func initDB() (*sql.DB, error) {
 	log.SetOutput(os.Stdout)
-	goose.SetVerbose(true)
 	db, err := sql.Open("sqlite3", ":memory:")
 	if err != nil {
 		return nil, err

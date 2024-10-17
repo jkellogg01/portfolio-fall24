@@ -28,19 +28,23 @@ func spotifyAuthBegin() http.HandlerFunc {
 			respondWithError(w, r, http.StatusBadRequest, "invalid access token")
 			return
 		}
+		stateString := generateRandomString(16)
 		http.SetCookie(w, &http.Cookie{
 			Name:        "spotify-auth-state",
-			Value:       generateRandomString(16),
+			Value:       stateString,
 			Path:        "/",
 			Secure:      true,
 			HttpOnly:    true,
 			SameSite:    http.SameSiteLaxMode,
 			Partitioned: true,
 		})
-		http.Redirect(w, r, fmt.Sprintf(
-			"https://accounts.spotify.com/authorize?response_type=code&show_dialog=false&scope=%sclient_id=%s&redirect_uri=%s",
-			url.QueryEscape("user-top-read"), url.QueryEscape(os.Getenv("SPOTIFY_CLIENT_ID")), url.QueryEscape(os.Getenv("SPOTIFY_REDIRECT_URI")),
-		), 302)
+		queryParams := url.Values{}
+		queryParams.Add("response_type", "code")
+		queryParams.Add("client_id", os.Getenv("SPOTIFY_CLIENT_ID"))
+		queryParams.Add("scope", "user-top-read")
+		queryParams.Add("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
+		queryParams.Add("state", stateString)
+		http.Redirect(w, r, fmt.Sprintf("https://accounts.spotify.com/authorize?%s", queryParams.Encode()), 302)
 	}
 }
 
@@ -69,15 +73,16 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			respondWithError(w, r, http.StatusBadRequest, "spotify returned no error but provided no code")
 			return
 		}
-		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(
-			"https://accounts.spotify.com/api/token?grant_type=authorization_code&code=%s&redirect_uri=%s",
-			url.QueryEscape(values.Get("code")), url.QueryEscape(os.Getenv("SPOTIFY_REDIRECT_URI")),
-		), nil)
+		queryParams := url.Values{}
+		queryParams.Add("grant_type", "authorization_code")
+		queryParams.Add("code", values.Get("code"))
+		queryParams.Add("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
+		req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("https://accounts.spotify.com/api/token?%s", queryParams.Encode()), nil)
 		if err != nil {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to create token request")
 			return
 		}
-		clientInfo := fmt.Sprintf("%s:%s", os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"))
+		clientInfo := fmt.Sprintf("%s:%s", os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
 		encodedClientInfo := base64.StdEncoding.EncodeToString([]byte(clientInfo))
 		req.Header.Add("Authorization", fmt.Sprintf("Basic %s", encodedClientInfo))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -86,6 +91,11 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to request token from spotify")
 			return
 		} else if res.StatusCode != http.StatusOK {
+			responseInfo := make(map[string]string)
+			err := json.NewDecoder(res.Body).Decode(&responseInfo)
+			if err == nil {
+				fmt.Printf("%+v\n", responseInfo)
+			}
 			respondWithError(w, r, http.StatusInternalServerError, "got response %s from spotify's api", res.Status)
 			return
 		}
@@ -121,17 +131,10 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 }
 
 func generateRandomString(length int) string {
-	buf := make([]byte, 0, length)
-	for range length {
-		char := byte(rand.Intn(62))
-		if char < 10 {
-			char += '0'
-		} else if char < 36 {
-			char += 'a'
-		} else {
-			char += 'A'
-		}
-		buf = append(buf, char)
+	chars := "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOGsphinxofblackquartzjudgemyvow0123456789"
+	buf := make([]byte, length)
+	for i := range length {
+		buf[i] = chars[rand.Intn(len(chars))]
 	}
 	return string(buf)
 }

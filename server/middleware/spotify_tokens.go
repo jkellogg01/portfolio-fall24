@@ -14,7 +14,7 @@ import (
 	"github.com/jkellogg01/portfolio-fall24/server/database"
 )
 
-func getSpotifyToken(next http.Handler, q *database.Queries) http.Handler {
+func GetSpotifyToken(next http.Handler, q *database.Queries) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenPair, err := q.GetTokenPair(r.Context())
 		if err != nil {
@@ -26,15 +26,15 @@ func getSpotifyToken(next http.Handler, q *database.Queries) http.Handler {
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
-		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(
-			"https://accounts.spotify.com/api/token?grant_type=refresh_token&refresh_token=%s",
-			url.QueryEscape(tokenPair.RefreshToken),
-		), nil)
+		queryParams := url.Values{}
+		queryParams.Add("grant_type", "refresh_token")
+		queryParams.Add("refresh_token", tokenPair.RefreshToken)
+		req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("https://accounts.spotify.com/api/token?%s", queryParams.Encode()), nil)
 		if err != nil {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to create token request")
 			return
 		}
-		clientInfo := fmt.Sprintf("%s:%s", os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"))
+		clientInfo := fmt.Sprintf("%s:%s", os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
 		encodedClientInfo := base64.StdEncoding.EncodeToString([]byte(clientInfo))
 		req.Header.Add("Authorization", fmt.Sprintf("Basic %s", encodedClientInfo))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
