@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTopSongs } from "../api";
+import { getTopArtists } from "../api";
 
 export function TopArtists({
   limit,
@@ -12,7 +12,7 @@ export function TopArtists({
 }) {
   const { data, error } = useQuery({
     queryKey: ["top-songs"],
-    queryFn: getTopSongs(limit, offset, time_range),
+    queryFn: getTopArtists(limit, offset, time_range),
     staleTime: 1000 * 60 * 15,
   });
   if (error || !data) {

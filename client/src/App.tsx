@@ -50,7 +50,7 @@ WM: sway
 Theme: tokyonight
 Terminal: alacritty`;
 
-export default function () {
+export function App() {
   return (
     <div className="container mx-auto my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
       <div className="flex flex-col gap-4 w-full md:w-96 xl:w-[38rem]">

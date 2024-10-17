@@ -1,7 +1,13 @@
 import { useForm } from "@tanstack/react-form";
-import { client } from "../api";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { emailRequestSchema } from "../../../server/lib/types";
+import { z } from "zod";
+
+const emailRequestSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  company: z.string().optional(),
+  message: z.string().min(1),
+});
 
 export function ContactForm() {
   const form = useForm({
@@ -19,15 +25,15 @@ export function ContactForm() {
       ),
     },
     onSubmit: ({ value }) => {
-      client.api.contact
-        .$post({
-          json: {
-            name: value.name,
-            email: value.email,
-            company: value.company,
-            message: value.message,
-          },
-        })
+      fetch("/api/contact", {
+        method: "POST",
+        body: JSON.stringify({
+          name: value.name,
+          email: value.email,
+          company: value.company,
+          message: value.message,
+        }),
+      })
         .then((res) => {
           if (!res.ok) {
             console.error("failed to submit contact form response");
