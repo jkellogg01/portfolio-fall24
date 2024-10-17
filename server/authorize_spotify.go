@@ -91,7 +91,7 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 		}
 		var body struct {
 			AccessToken  string `json:"access_token"`
-			RefreshToken string `json:"refresh_token,omitempty"`
+			RefreshToken string `json:"refresh_token"`
 			Scope        string `json:"scope,omitempty"`
 			ExpiresIn    int    `json:"expires_in"`
 			TokenType    string `json:"token_type"`
