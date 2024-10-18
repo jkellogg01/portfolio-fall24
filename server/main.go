@@ -54,8 +54,8 @@ func main() {
 
 	log.Printf("starting server at %s", server.Addr)
 	var currentAddress string
-	if os.Getenv("RAILWAY_PUBLIC_DOMAIN") != "" {
-		currentAddress = os.Getenv("RAILWAY_PUBLIC_DOMAIN")
+	if os.Getenv("RAILWAY_SERVICE_ID") != "" {
+		currentAddress = "https://next.jkellogg.dev"
 	} else {
 		currentAddress = fmt.Sprintf("http://localhost:%s", port)
 	}
