@@ -56,7 +56,7 @@ export function ContactForm() {
         form.reset();
       }}
     >
-      <h3 className="font-bold text-lg text-tokyonight-yellow">Contact Me</h3>
+      <h3 className="font-bold text-xl text-tokyonight-yellow">Contact Me</h3>
       <div className="flex flex-row gap-2 pt-2 w-full">
         <form.Field
           name="name"
@@ -71,7 +71,7 @@ export function ContactForm() {
                 onChange={(e) => field.handleChange(e.currentTarget.value)}
                 onBlur={field.handleBlur}
                 placeholder="string"
-                className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full"
+                className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
                 required
               />
               <small className="text-sm text-tokyonight-red">
@@ -93,7 +93,7 @@ export function ContactForm() {
                 onChange={(e) => field.handleChange(e.currentTarget.value)}
                 onBlur={field.handleBlur}
                 placeholder="string | undefined"
-                className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full"
+                className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
               />
               <small className="text-sm text-tokyonight-red">
                 {field.state.meta.errors.join(", ")}
@@ -115,7 +115,7 @@ export function ContactForm() {
               onChange={(e) => field.handleChange(e.currentTarget.value)}
               onBlur={field.handleBlur}
               placeholder="string"
-              className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full"
+              className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
             />
             <small className="text-sm text-tokyonight-red">
               {field.state.meta.errors.join(", ")}
@@ -136,7 +136,7 @@ export function ContactForm() {
               onChange={(e) => field.handleChange(e.currentTarget.value)}
               onBlur={field.handleBlur}
               placeholder="string"
-              className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full resize-y"
+              className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full resize-y border border-tokyonight-foreground-dark"
             />
             <small className="text-sm text-tokyonight-red">
               {field.state.meta.errors.join(", ")}
