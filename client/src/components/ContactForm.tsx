@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
+import { useState } from "react";
 import { z } from "zod";
 
 const emailRequestSchema = z.object({
@@ -8,6 +9,14 @@ const emailRequestSchema = z.object({
   company: z.string().optional(),
   message: z.string().min(1),
 });
+
+const stringTypes = [
+  { name: "typescript", required: "string", optional: "string?" },
+  { name: "rust (also java!)", required: "String", optional: "Option<String>" },
+  { name: "zig", required: "*const [_:0]u8", optional: "?*const [_:0]u8" },
+  { name: "gleam", required: "String", optional: "Option(String)" },
+  { name: "ocaml", required: "String", optional: "String option" },
+];
 
 export function ContactForm() {
   const form = useForm({
@@ -47,6 +56,11 @@ export function ContactForm() {
     },
   });
 
+  const [stringType] = useState(() => {
+    return stringTypes[Math.floor(Math.random() * stringTypes.length)];
+  });
+  console.log(`displaying string types like ${stringType.name}`);
+
   return (
     <form
       onSubmit={async (event) => {
@@ -70,7 +84,7 @@ export function ContactForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.currentTarget.value)}
                 onBlur={field.handleBlur}
-                placeholder="string"
+                placeholder={stringType.required}
                 className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
                 required
               />
@@ -92,7 +106,7 @@ export function ContactForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.currentTarget.value)}
                 onBlur={field.handleBlur}
-                placeholder="string | undefined"
+                placeholder={stringType.optional}
                 className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
               />
               <small className="text-sm text-tokyonight-red">
@@ -114,7 +128,7 @@ export function ContactForm() {
               value={field.state.value}
               onChange={(e) => field.handleChange(e.currentTarget.value)}
               onBlur={field.handleBlur}
-              placeholder="string"
+              placeholder={stringType.required}
               className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full border border-tokyonight-foreground-dark"
             />
             <small className="text-sm text-tokyonight-red">
@@ -135,7 +149,7 @@ export function ContactForm() {
               value={field.state.value}
               onChange={(e) => field.handleChange(e.currentTarget.value)}
               onBlur={field.handleBlur}
-              placeholder="string"
+              placeholder={stringType.required}
               className="bg-tokyonight-background text-tokyonight-foreground placeholder-tokyonight-foreground-dark rounded-md p-2 w-full resize-y border border-tokyonight-foreground-dark"
             />
             <small className="text-sm text-tokyonight-red">
