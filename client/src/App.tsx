@@ -52,7 +52,7 @@ Terminal: alacritty`;
 
 export function App() {
   return (
-    <div className="container mx-auto my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
+    <div className="sm:container mx-auto max-sm:mx-2 my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
       <div className="flex flex-col gap-4 w-full md:w-96 xl:w-[38rem]">
         <div className="text-tokyonight-magenta bg-tokyonight-background-dark p-4 rounded-lg flex flex-col sm:flex-row md:flex-col xl:flex-row justify-center items-center gap-0 border border-tokyonight-foreground">
           <pre
@@ -124,7 +124,40 @@ export function App() {
             junior engineer to your team, don't hesitate to reach out!
           </p>
         </div>
-        <div className="border border-tokyonight-foreground bg-tokyonight-background-dark p-4 rounded-lg flex flex-col gap-2">
+        <div className="flex flex-row gap-4">
+          <a
+            href="https://www.github.com/jkellogg01"
+            target="_blank"
+            className="block bg-tokyonight-background-dark hover:bg-tokyonight-foreground-dark hover:text-tokyonight-background transition-colors border rounded-lg border-tokyonight-foreground p-2 content-center text-center flex-grow text-lg group"
+          >
+            My code on{" "}
+            <span className="font-bold text-tokyonight-blue group-hover:text-tokyonight-cyan underline transition-colors">
+              Github
+            </span>
+          </a>
+          {/* I'm not sure if this one will work correctly when deployed */}
+          <a
+            href="/materials/resume.pdf"
+            target="_blank"
+            className="block bg-tokyonight-background-dark hover:bg-tokyonight-foreground-dark hover:text-tokyonight-background transition-colors border rounded-lg border-tokyonight-foreground p-2 content-center text-center flex-grow text-lg group"
+          >
+            My most recent{" "}
+            <span className="font-bold text-tokyonight-blue group-hover:text-tokyonight-cyan underline transition-colors">
+              resume
+            </span>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/jkellogg-dev"
+            target="_blank"
+            className="block bg-tokyonight-background-dark hover:bg-tokyonight-foreground-dark hover:text-tokyonight-background transition-colors border rounded-lg border-tokyonight-foreground p-2 content-center text-center flex-grow text-lg group"
+          >
+            Connect on{" "}
+            <span className="font-bold text-tokyonight-blue group-hover:text-tokyonight-cyan underline transition-colors">
+              LinkedIn
+            </span>
+          </a>
+        </div>
+        <div className="border border-tokyonight-foreground bg-tokyonight-background-dark p-2 rounded-lg flex flex-col gap-2">
           <details className="bg-tokyonight-green/5 p-2 rounded-md border border-tokyonight-green/50">
             <summary className="text-xl font-bold text-tokyonight-green cursor-pointer">
               Language Proficiencies
