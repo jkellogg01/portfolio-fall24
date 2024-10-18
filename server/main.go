@@ -37,6 +37,7 @@ func main() {
 	router.Handle("/api/", http.StripPrefix("/api", api))
 	api.HandleFunc("GET /spotify/authorize/{token}", spotifyAuthBegin())
 	api.HandleFunc("GET /spotify/authorize/callback", spotifyAuthCallback(queries))
+	api.HandleFunc("POST /contact", contactFormSubmit)
 
 	spotifyAuthed := http.NewServeMux()
 	api.Handle("/spotify/", http.StripPrefix("/spotify", middleware.GetSpotifyToken(spotifyAuthed, queries)))
