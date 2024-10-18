@@ -3,8 +3,8 @@ import { TopArtists } from "./components/TopArtists";
 
 // these seem redundant but formatters do not respect the contents of <pre> tags. Who knows why? Certainly not me
 
-const figFirstName = `       __           __               
-      / /___  _____/ /_  __  ______ _
+const figFirstName = `   ______           __               
+  /___  /___  _____/ /_  __  ______ _
  __  / / __ \\/ ___/ __ \\/ / / / __ \`/
 / /_/ / /_/ (__  ) / / / /_/ / /_/ / 
 \\____/\\____/____/_/ /_/\\__,_/\\__,_/  
@@ -125,8 +125,8 @@ export function App() {
           </p>
         </div>
         <div className="border border-tokyonight-foreground bg-tokyonight-background-dark p-4 rounded-lg flex flex-col gap-2">
-          <details className="bg-tokyonight-green/5 p-2 rounded-md border border-tokyonight-green/50 cursor-pointer">
-            <summary className="text-xl font-bold text-tokyonight-green">
+          <details className="bg-tokyonight-green/5 p-2 rounded-md border border-tokyonight-green/50">
+            <summary className="text-xl font-bold text-tokyonight-green cursor-pointer">
               Language Proficiencies
             </summary>
             <p>
@@ -138,8 +138,8 @@ export function App() {
               languages for the web, including HTML, CSS, and SQL.
             </p>
           </details>
-          <details className="bg-tokyonight-magenta/5 p-2 rounded-md border border-tokyonight-magenta/50 cursor-pointer">
-            <summary className="text-xl font-bold text-tokyonight-magenta">
+          <details className="bg-tokyonight-magenta/5 p-2 rounded-md border border-tokyonight-magenta/50">
+            <summary className="text-xl font-bold text-tokyonight-magenta cursor-pointer">
               Framework Proficiencies
             </summary>
             <p>
@@ -154,8 +154,8 @@ export function App() {
               Javascript ecosystem as well.
             </p>
           </details>
-          <details className="bg-tokyonight-blue/5 p-2 rounded-md border border-tokyonight-blue/50 cursor-pointer">
-            <summary className="text-xl font-bold text-tokyonight-blue">
+          <details className="bg-tokyonight-blue/5 p-2 rounded-md border border-tokyonight-blue/50">
+            <summary className="text-xl font-bold text-tokyonight-blue cursor-pointer">
               Technology Proficiencies
             </summary>
             {/* there may be a better name for this section */}
