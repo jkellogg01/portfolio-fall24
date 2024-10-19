@@ -5,13 +5,35 @@ import (
 	"net/http"
 	"os"
 	"slices"
+	"sync"
 	"time"
 )
 
-type cacheObject struct {
+type cache struct {
+	data map[string]cacheItem
+	mu   *sync.RWMutex
+}
+
+type cacheItem struct {
 	body        []byte
 	contentType string
 	createdAt   time.Time
+}
+
+func (c *cache) Set(k string, v cacheItem) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.data[k] = v
+}
+
+func (c *cache) Get(k string) *cacheItem {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	v, ok := c.data[k]
+	if !ok {
+		return nil
+	}
+	return &v
 }
 
 type bodyTappedWriter struct {
@@ -31,7 +53,10 @@ func (w *bodyTappedWriter) WriteHeader(status int) {
 }
 
 func StupidCache(next http.Handler) http.Handler {
-	theCacheInQuestion := make(map[string]cacheObject)
+	theCacheInQuestion := cache{
+		data: make(map[string]cacheItem),
+		mu:   &sync.RWMutex{},
+	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !slices.Contains([]string{
 			http.MethodGet,
@@ -42,8 +67,8 @@ func StupidCache(next http.Handler) http.Handler {
 			return
 		}
 		path := r.URL.String()
-		resp, ok := theCacheInQuestion[path]
-		if ok && resp.createdAt.Add(time.Hour*time.Duration(24)).After(time.Now()) {
+		resp := theCacheInQuestion.Get(path)
+		if resp != nil && resp.createdAt.Add(time.Hour*time.Duration(24)).After(time.Now()) {
 			fmt.Fprintf(os.Stdout, "[CACHE HIT] %s\n", path)
 			w.Header().Set("Content-Type", resp.contentType)
 			w.WriteHeader(http.StatusOK)
@@ -55,10 +80,10 @@ func StupidCache(next http.Handler) http.Handler {
 		if tap.statusCode/100 != 2 {
 			return
 		}
-		theCacheInQuestion[path] = cacheObject{
+		theCacheInQuestion.Set(path, cacheItem{
 			body:        tap.body,
 			contentType: tap.Header().Get("Content-Type"),
 			createdAt:   time.Now(),
-		}
+		})
 	})
 }
