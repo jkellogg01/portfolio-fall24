@@ -1,3 +1,297 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-100.ttf");
+  font-weight: 100;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-200.ttf");
+  font-weight: 200;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-300.ttf");
+  font-weight: 300;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-400.ttf");
+  font-weight: 400;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-500.ttf");
+  font-weight: 500;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-600.ttf");
+  font-weight: 600;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-700.ttf");
+  font-weight: 700;
+  font-family: ibm plex sans;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-100.ttf");
+  font-weight: 100;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-200.ttf");
+  font-weight: 200;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-300.ttf");
+  font-weight: 300;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-400.ttf");
+  font-weight: 400;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-500.ttf");
+  font-weight: 500;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-600.ttf");
+  font-weight: 600;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-700.ttf");
+  font-weight: 700;
+  font-family: ibm plex serif;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-100.ttf");
+  font-weight: 100;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-200.ttf");
+  font-weight: 200;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-300.ttf");
+  font-weight: 300;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-400.ttf");
+  font-weight: 400;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-500.ttf");
+  font-weight: 500;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-600.ttf");
+  font-weight: 600;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-700.ttf");
+  font-weight: 700;
+  font-family: ibm plex mono;
+  font-style: regular;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-100-i.ttf");
+  font-weight: 100;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-200-i.ttf");
+  font-weight: 200;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-300-i.ttf");
+  font-weight: 300;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-400-i.ttf");
+  font-weight: 400;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-500-i.ttf");
+  font-weight: 500;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-600-i.ttf");
+  font-weight: 600;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_sans-700-i.ttf");
+  font-weight: 700;
+  font-family: ibm plex sans;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-100-i.ttf");
+  font-weight: 100;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-200-i.ttf");
+  font-weight: 200;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-300-i.ttf");
+  font-weight: 300;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-400-i.ttf");
+  font-weight: 400;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-500-i.ttf");
+  font-weight: 500;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-600-i.ttf");
+  font-weight: 600;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_serif-700-i.ttf");
+  font-weight: 700;
+  font-family: ibm plex serif;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-100-i.ttf");
+  font-weight: 100;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-200-i.ttf");
+  font-weight: 200;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-300-i.ttf");
+  font-weight: 300;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-400-i.ttf");
+  font-weight: 400;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-500-i.ttf");
+  font-weight: 500;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-600-i.ttf");
+  font-weight: 600;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
+
+@font-face {
+  src: url("/ibm_plex/ibm_plex_mono-700-i.ttf");
+  font-weight: 700;
+  font-family: ibm plex mono;
+  font-style: italic;
+}
