@@ -1,85 +1,23 @@
+import { AsciiNameBanner, FakeNeoFetch } from "./components/Ascii";
 import { ContactForm } from "./components/ContactForm";
 import { TopArtists } from "./components/TopArtists";
 
-// these seem redundant but formatters do not respect the contents of <pre> tags. Who knows why? Certainly not me
-
-const figFirstName = `   ______           __               
-  /___  /___  _____/ /_  __  ______ _
- __  / / __ \\/ ___/ __ \\/ / / / __ \`/
-/ /_/ / /_/ (__  ) / / / /_/ / /_/ / 
-\\____/\\____/____/_/ /_/\\__,_/\\__,_/  
-                                     `;
-
-const figLastName = `    __ __     ____                 
-   / //_/__  / / /___  ____ _____ _
-  / ,< / _ \\/ / / __ \\/ __ \`/ __ \`/
- / /| /  __/ / / /_/ / /_/ / /_/ / 
-/_/ |_\\___/_/_/\\____/\\__, /\\__, /  
-                    /____//____/   
-`;
-
-const arch = `                  -\`
-                 .o+\`
-                \`ooo/
-               \`+oooo:
-              \`+oooooo:
-              -+oooooo+:
-            \`/:-:++oooo+:
-           \`/++++/+++++++:
-          \`/++++++++++++++:
-         \`/+++ooooooooooooo/\`
-        ./ooosssso++osssssso+\`
-       .oossssso-\`\`\`\`/ossssss+\`
-      -osssssso.      :ssssssso.
-     :osssssss/        osssso+++.
-    /ossssssss/        +ssssooo/-
-  \`/ossssso+/:-        -:/+osssso+-
- \`+sso+:-\`                 \`.-/+oso:
-\`++:.                           \`-/+/
-.\`                                 \`/`;
-
-const fetchResult = `josh@https://www.jkellogg.dev
------------------------------
-OS: Arch Linux x86_64
-Kernel: 6.10.10-arch1-1
-Uptime: 8 days, 15 hours, 11 mins
-Packages: 663 (pacman)
-Shell: bash 5.2.32
-Resolution: 2560x1440
-WM: sway
-Theme: tokyonight
-Terminal: alacritty`;
-
 export function App() {
   return (
-    <div className="sm:container mx-auto max-sm:mx-2 my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
-      <div className="flex flex-col gap-4 w-full md:w-96 xl:w-[38rem]">
+    <div className="container mx-auto px-2 my-8 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-center items-start">
+      <div className="flex flex-col gap-4 w-fit max-md:w-full">
         <div className="text-tokyonight-magenta bg-tokyonight-background-dark p-4 rounded-lg flex flex-col sm:flex-row md:flex-col xl:flex-row justify-center items-center gap-0 border border-tokyonight-foreground">
-          <pre
-            className="w-fit text-xs"
-            aria-label="Joshua"
-            aria-description="ascii art of my first name, Joshua"
-          >
-            {figFirstName}
-          </pre>
-          <pre
-            className="w-fit text-xs"
-            aria-label="Kellogg"
-            aria-description="ascii art of my last name, Kellogg"
-          >
-            {figLastName}
-          </pre>
+          <AsciiNameBanner
+            className="block sm:hidden md:block xl:hidden"
+            variant="stacked"
+          />
+          <AsciiNameBanner
+            className="hidden sm:block md:hidden xl:block"
+            variant="wide"
+          />
         </div>
         <div className="justify-center bg-tokyonight-background-dark p-4 rounded-lg hidden md:flex flex-row gap-0 border border-tokyonight-foreground">
-          <pre
-            className="w-fit text-xs hidden xl:block text-tokyonight-cyan"
-            aria-description="ascii art of the Arch Linux logo"
-          >
-            {arch}
-          </pre>
-          <div className="w-[1ch] hidden xl:block" />
-          {/* I don't think this needs aria-description because it's actually textual */}
-          <pre className="w-fit text-xs">{fetchResult}</pre>
+          <FakeNeoFetch />
         </div>
         <div className="bg-tokyonight-background-dark border border-tokyonight-foreground rounded-lg p-4 hidden md:block">
           <TopArtists limit={5} offset={0} time_range="short_term" />
