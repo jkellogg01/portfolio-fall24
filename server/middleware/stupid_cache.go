@@ -43,7 +43,7 @@ type bodyTappedWriter struct {
 }
 
 func (w *bodyTappedWriter) Write(body []byte) (int, error) {
-	w.body = body
+	w.body = append(w.body, body...)
 	return w.ResponseWriter.Write(body)
 }
 
