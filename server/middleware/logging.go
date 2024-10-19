@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-type wrappedWriter struct {
+type statusTappedWriter struct {
 	http.ResponseWriter
 	statusCode int
 }
 
-func (w *wrappedWriter) WriteHeader(statusCode int) {
+func (w *statusTappedWriter) WriteHeader(statusCode int) {
 	w.statusCode = statusCode
 	w.ResponseWriter.WriteHeader(statusCode)
 }
@@ -20,17 +20,11 @@ func (w *wrappedWriter) WriteHeader(statusCode int) {
 func Log(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t := time.Now()
-		wrapped := wrappedWriter{
+		tap := statusTappedWriter{
 			ResponseWriter: w,
 			statusCode:     0,
 		}
-		next.ServeHTTP(&wrapped, r)
-		fmt.Fprintf(os.Stdout, "[%3d] %s @ %s in %v", wrapped.statusCode, r.Method, r.URL.Path, time.Since(t))
-		sentError, ok := r.Context().Value("error").(string)
-		if !ok {
-			fmt.Fprintf(os.Stdout, "\n")
-			return
-		}
-		fmt.Fprintf(os.Stdout, " | %s\n", sentError)
+		next.ServeHTTP(&tap, r)
+		fmt.Fprintf(os.Stdout, "[%3d] %s @ %s in %v\n", tap.statusCode, r.Method, r.URL.Path, time.Since(t))
 	})
 }

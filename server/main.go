@@ -47,9 +47,10 @@ func main() {
 	router.Handle("/", dist)
 
 	port := cmp.Or(os.Getenv("PORT"), "8080")
+	cachedRouter := middleware.StupidCache(router)
 	server := http.Server{
 		Addr:    fmt.Sprintf("0.0.0.0:%s", port),
-		Handler: middleware.Log(router),
+		Handler: middleware.Log(cachedRouter),
 	}
 
 	log.Printf("starting server at %s", server.Addr)
