@@ -179,7 +179,7 @@ export function ContactForm() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="bg-tokyonight-yellow text-tokyonight-background-dark disabled:bg-tokyonight-foreground-dark disabled:text-tokyonight-background p-2 mt-2 rounded-md"
+              className="bg-tokyonight-yellow active:bg-tokyonight-yellow-bright text-tokyonight-background-dark disabled:bg-tokyonight-foreground-dark disabled:text-tokyonight-background p-2 mt-2 rounded-md"
             >
               Submit
             </button>

@@ -52,7 +52,7 @@ function ArtistCard({
 }: {
   name: string;
   url?: string;
-  images: Array<{ url: string; width: number; height: number }>;
+  images: Array<{ url: string; width?: number; height?: number }>;
   genres: string;
 }) {
   const image =
@@ -61,7 +61,7 @@ function ArtistCard({
   return (
     <a
       href={url}
-      className="block bg-tokyonight-background border border-tokyonight-foreground-dark rounded-md"
+      className="block bg-tokyonight-background border border-tokyonight-foreground-dark hover:border-tokyonight-red rounded-md group transition-colors"
     >
       <div className="p-2 flex flex-row gap-2">
         <div className="min-w-20">
@@ -73,8 +73,12 @@ function ArtistCard({
           />
         </div>
         <div className="flex flex-col">
-          <h3 className="font-medium">{name}</h3>
-          <p className="text-sm text-tokyonight-foreground-dark">{genres}</p>
+          <h3 className="font-medium group-hover:text-tokyonight-red transition-colors">
+            {name}
+          </h3>
+          <p className="text-sm text-tokyonight-foreground-dark group-hover:text-tokyonight-red-bright transition-colors">
+            {genres}
+          </p>
         </div>
       </div>
     </a>
