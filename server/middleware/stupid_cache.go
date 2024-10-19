@@ -17,7 +17,7 @@ type cache struct {
 type cacheItem struct {
 	body        []byte
 	contentType string
-	createdAt   time.Time
+	expiresAt   time.Time
 }
 
 func (c *cache) Set(k string, v cacheItem) {
@@ -34,6 +34,12 @@ func (c *cache) Get(k string) *cacheItem {
 		return nil
 	}
 	return &v
+}
+
+func (c *cache) Remove(k string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	delete(c.data, k)
 }
 
 type bodyTappedWriter struct {
@@ -68,12 +74,17 @@ func StupidCache(next http.Handler) http.Handler {
 		}
 		path := r.URL.String()
 		resp := theCacheInQuestion.Get(path)
-		if resp != nil && resp.createdAt.Add(time.Hour*time.Duration(24)).After(time.Now()) {
+		if resp != nil && resp.expiresAt.After(time.Now()) {
 			fmt.Fprintf(os.Stdout, "[CACHE HIT] %s\n", path)
 			w.Header().Set("Content-Type", resp.contentType)
 			w.WriteHeader(http.StatusOK)
 			w.Write(resp.body)
 			return
+		} else if resp != nil {
+			// map memory doesn't get garbage collected but this should allow that
+			// memory to be reused so that railway doesn't have to charge me
+			// 300 million dollars a month
+			theCacheInQuestion.Remove(path)
 		}
 		tap := &bodyTappedWriter{ResponseWriter: w}
 		next.ServeHTTP(tap, r)
@@ -83,7 +94,7 @@ func StupidCache(next http.Handler) http.Handler {
 		theCacheInQuestion.Set(path, cacheItem{
 			body:        tap.body,
 			contentType: tap.Header().Get("Content-Type"),
-			createdAt:   time.Now(),
+			expiresAt:   time.Now().Add(24 * time.Hour),
 		})
 	})
 }
