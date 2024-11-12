@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cmp"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
