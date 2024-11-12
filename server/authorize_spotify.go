@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -133,7 +134,8 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to write token pair to database")
 			return
 		}
-		http.Redirect(w, r, os.Getenv("APP_URL"), http.StatusFound)
+		appURL := cmp.Or(os.Getenv("RAILWAY_PUBLIC_DOMAIN"), "http://localhost:8080")
+		http.Redirect(w, r, appURL, http.StatusFound)
 	}
 }
 
