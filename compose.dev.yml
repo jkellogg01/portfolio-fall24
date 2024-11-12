@@ -6,9 +6,29 @@ services:
     ports:
       - "8080:8080"
     env_file: ./server/.env
+    environment:
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
     develop:
       watch:
         - path: ./server
           action: rebuild
           ignore:
             - ./server/sql/
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: portfolio
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres -d portfolio
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s

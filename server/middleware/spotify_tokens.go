@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -11,6 +10,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jkellogg01/portfolio-fall24/server/database"
 )
 
@@ -21,7 +21,10 @@ func GetSpotifyToken(next http.Handler, q *database.Queries) http.Handler {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		if tokenPair.ExpiresAt > time.Now().Unix() {
+		if !tokenPair.ExpiresAt.Valid {
+			// TODO: panic or something idk
+		}
+		if tokenPair.ExpiresAt.Time.Before(time.Now()) {
 			ctx := context.WithValue(r.Context(), "spotify-access", tokenPair.AccessToken)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
@@ -69,8 +72,15 @@ func GetSpotifyToken(next http.Handler, q *database.Queries) http.Handler {
 		newTokenPair, err := q.CreateTokenPair(r.Context(), database.CreateTokenPairParams{
 			AccessToken:  body.AccessToken,
 			RefreshToken: body.RefreshToken,
-			ExpiresAt:    expireAt.Unix(),
-			Scope:        sql.NullString{Valid: body.Scope != "", String: body.Scope},
+			ExpiresAt: pgtype.Timestamp{
+				Time:             expireAt,
+				InfinityModifier: pgtype.Finite,
+				Valid:            true,
+			},
+			Scope: pgtype.Text{
+				String: body.Scope,
+				Valid:  body.Scope != "",
+			},
 		})
 		if err != nil {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to write token pair to database")

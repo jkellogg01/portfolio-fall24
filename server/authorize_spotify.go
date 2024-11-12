@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -12,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jkellogg01/portfolio-fall24/server/database"
 	"github.com/jkellogg01/portfolio-fall24/server/jwt"
 )
@@ -116,17 +116,24 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			return
 		}
 		expireAt := time.Now().Add(time.Duration(body.ExpiresIn) * time.Second)
-		tokenPair, err := q.CreateTokenPair(r.Context(), database.CreateTokenPairParams{
+		_, err = q.CreateTokenPair(r.Context(), database.CreateTokenPairParams{
 			AccessToken:  body.AccessToken,
 			RefreshToken: body.RefreshToken,
-			ExpiresAt:    expireAt.Unix(),
-			Scope:        sql.NullString{Valid: body.Scope != "", String: body.Scope},
+			ExpiresAt: pgtype.Timestamp{
+				Time:             expireAt,
+				InfinityModifier: pgtype.Finite,
+				Valid:            true,
+			},
+			Scope: pgtype.Text{
+				String: body.Scope,
+				Valid:  body.Scope != "",
+			},
 		})
 		if err != nil {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to write token pair to database")
 			return
 		}
-		respondWithJSON(w, http.StatusCreated, tokenPair)
+		http.Redirect(w, r, os.Getenv("APP_URL"), http.StatusFound)
 	}
 }
 

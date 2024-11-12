@@ -7,26 +7,27 @@ package database
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createTokenPair = `-- name: CreateTokenPair :one
-INSERT INTO spotify_token_pairs (
+INSERT INTO spotify_token_pair (
   access_token, refresh_token, expires_at, scope
 ) VALUES (
-  ?, ?, ?, ?
+  $1, $2, $3, $4
 ) RETURNING id, access_token, refresh_token, scope, created_at, expires_at
 `
 
 type CreateTokenPairParams struct {
-	AccessToken  string         `json:"access_token"`
-	RefreshToken string         `json:"refresh_token"`
-	ExpiresAt    int64          `json:"expires_at"`
-	Scope        sql.NullString `json:"scope"`
+	AccessToken  string           `json:"access_token"`
+	RefreshToken string           `json:"refresh_token"`
+	ExpiresAt    pgtype.Timestamp `json:"expires_at"`
+	Scope        pgtype.Text      `json:"scope"`
 }
 
 func (q *Queries) CreateTokenPair(ctx context.Context, arg CreateTokenPairParams) (SpotifyTokenPair, error) {
-	row := q.db.QueryRowContext(ctx, createTokenPair,
+	row := q.db.QueryRow(ctx, createTokenPair,
 		arg.AccessToken,
 		arg.RefreshToken,
 		arg.ExpiresAt,
@@ -46,19 +47,19 @@ func (q *Queries) CreateTokenPair(ctx context.Context, arg CreateTokenPairParams
 
 const getTokenPair = `-- name: GetTokenPair :one
 SELECT access_token, refresh_token, expires_at
-FROM spotify_token_pairs
-GROUP BY created_at
+FROM spotify_token_pair
+GROUP BY created_at, access_token, refresh_token, expires_at
 LIMIT 1
 `
 
 type GetTokenPairRow struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	ExpiresAt    int64  `json:"expires_at"`
+	AccessToken  string           `json:"access_token"`
+	RefreshToken string           `json:"refresh_token"`
+	ExpiresAt    pgtype.Timestamp `json:"expires_at"`
 }
 
 func (q *Queries) GetTokenPair(ctx context.Context) (GetTokenPairRow, error) {
-	row := q.db.QueryRowContext(ctx, getTokenPair)
+	row := q.db.QueryRow(ctx, getTokenPair)
 	var i GetTokenPairRow
 	err := row.Scan(&i.AccessToken, &i.RefreshToken, &i.ExpiresAt)
 	return i, err

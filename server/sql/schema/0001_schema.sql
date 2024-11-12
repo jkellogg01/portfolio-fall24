@@ -1,9 +1,12 @@
 -- +goose Up
-CREATE TABLE IF NOT EXISTS main.spotify_token_pairs (
-  id integer PRIMARY KEY,
+CREATE TABLE spotify_token_pair (
+  id serial not null,
   access_token text NOT NULL,
   refresh_token text NOT NULL,
   scope text,
-  created_at integer NOT NULL DEFAULT(unixepoch()),
-  expires_at integer NOT NULL
+  created_at timestamp NOT NULL DEFAULT now(),
+  expires_at timestamp NOT NULL
 );
+
+-- +goose Down
+DROP TABLE spotify_token_pair;

@@ -1,9 +1,7 @@
 FROM golang:alpine AS server-build
 
-ENV CGO_ENABLED=1
+ENV CGO_ENABLED=0
 ENV GOOS=linux
-
-RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app/server
 
@@ -11,7 +9,7 @@ COPY server/go.mod server/go.sum ./
 RUN go mod download
 
 COPY server .
-RUN go build -ldflags='-s -w -extldflags "-static"' -o /portfolio-server
+RUN go build -o /portfolio-server
 
 FROM server-build AS server-test
 

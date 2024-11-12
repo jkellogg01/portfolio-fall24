@@ -2,7 +2,7 @@ package main
 
 import (
 	"cmp"
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,14 +11,12 @@ import (
 	"github.com/jkellogg01/portfolio-fall24/server/database"
 	"github.com/jkellogg01/portfolio-fall24/server/jwt"
 	"github.com/jkellogg01/portfolio-fall24/server/middleware"
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/pressly/goose"
 )
 
 func main() {
 	log.SetOutput(os.Stdout)
 
-	db, err := initDB()
+	db, err := dbConnect(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,18 +63,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func initDB() (*sql.DB, error) {
-	log.SetOutput(os.Stdout)
-	db, err := sql.Open("sqlite3", ":memory:")
-	if err != nil {
-		return nil, err
-	}
-	err = goose.SetDialect("sqlite3")
-	if err != nil {
-		return nil, err
-	}
-	err = goose.Up(db, "sql/schema")
-	return db, err
 }
