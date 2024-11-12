@@ -134,7 +134,10 @@ func spotifyAuthCallback(q *database.Queries) http.HandlerFunc {
 			respondWithError(w, r, http.StatusInternalServerError, "failed to write token pair to database")
 			return
 		}
-		appURL := cmp.Or(os.Getenv("RAILWAY_PUBLIC_DOMAIN"), "http://localhost:8080")
+		appURL := "http://localhost:8080"
+		if os.Getenv("RAILWAY_PUBLIC_DOMAIN") != "" {
+			appURL = fmt.Sprintf("https://%s", os.Getenv("RAILWAY_PUBLIC_DOMAIN"))
+		}
 		http.Redirect(w, r, appURL, http.StatusFound)
 	}
 }
